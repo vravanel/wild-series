@@ -3,14 +3,20 @@
 {% block title %}Wild Series{% endblock %}
 
 {% block body %}
-    <h1>Toutes les séries de la table program : </h1>
+<h1>Toutes les séries de la table program : </h1>
+    <div class="container">
+    <div class="row">
      {% for program in programs %}
-        <div>
-            <h2>{{ loop.index }} / {{ program.title }} - Catégorie : {{ program.category.name }}</h2>
-            <p>{{ program.synopsis }}</p>
-            {# Lien vers la fiche de la série : #}
-            <a href="{{ path("program_show", { id: program.id }) }}">Voir la fiche</a>
-        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <img src="https://fakeimg.pl/358x200/?text={{ program.title }}" class="card-img-top" alt="{{ program.title }}">
+                <div class="card-body">
+                    <h2>{{ program.title }} - Catégorie : {{ program.category.name }}</h2>
+                    <p>{{ program.synopsis }}</p>
+                    <button> <a href="{{ path("program_show", { id: program.id }) }}">Voir la fiche</a> </button>
+                </div>
+            </div>
+        </div>        
     {% else %}
         Aucune série trouvée.
     {% endfor %}
