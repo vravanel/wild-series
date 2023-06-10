@@ -26,6 +26,19 @@
         </tbody>
     </table>
 
+    {% if comments is not empty %}
+        <ul>
+            {% for comment in comments %}
+                <li>Commentaire : {{ comment.comment }}</li>
+                <li>Rate : {{ comment.rate }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun commentaire trouvé.</p>
+    {% endif %}
+    {% if app.user %}
+        {{ include('comment/_form.html.twig') }}
+    {% endif %}
     <a href="{{ path('app_episode_index') }}">back to list</a>
 
     <a href="{{ path('app_episode_edit', {'id': episode.id}) }}">edit</a>

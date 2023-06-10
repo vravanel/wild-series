@@ -34,6 +34,9 @@
         {% endfor %}
         </tbody>
     </table>
+    {% if app.user %}
+        <a href="{{ path('app_comment_new') }}'">Ajouter un commentaire</a>
+    {% endif %}
 
     <a href="{{ path('app_episode_new') }}">Create new</a>
 {% endblock %}
