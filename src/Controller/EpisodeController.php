@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 
 #[Route('/episode')]
@@ -28,13 +29,15 @@ class EpisodeController extends AbstractController
     }
 
     #[Route('/new', name: 'app_episode_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EpisodeRepository $episodeRepository): Response
+    public function new(Request $request, EpisodeRepository $episodeRepository, SluggerInterface $slugger): Response
     {
         $episode = new Episode();
         $form = $this->createForm(EpisodeType::class, $episode);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $slug = $slugger->slug($episode->getTitle());
+            $episode->setSlug($slug);
             $episodeRepository->save($episode, true);
             $this->addFlash('success', "L'épisode a bien été créé");
 
@@ -47,7 +50,7 @@ class EpisodeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_episode_show', methods: ['GET', 'POST'])]
+    #[Route('/{slug}', name: 'app_episode_show', methods: ['GET'])]
     public function show(Request $request, CommentRepository $commentRepository, Episode $episode, Security $security): Response
     {
         $comment = new Comment();
@@ -65,19 +68,21 @@ class EpisodeController extends AbstractController
             return $this->redirectToRoute('app_episode_show', ['id' => $episode->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('episode/show.html.twig', [
+        return $this->renderForm('episode/show.html.twig', [
             'episode' => $episode,
             'form' => $form,
             'comments' => $comments,
         ]);
     }
-    #[Route('/{id}/edit', name: 'app_episode_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Episode $episode, EpisodeRepository $episodeRepository): Response
+    #[Route('/{slug}/edit', name: 'app_episode_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Episode $episode, EpisodeRepository $episodeRepository, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(EpisodeType::class, $episode);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $slug = $slugger->slug($episode->getTitle());
+            $episode->setSlug($slug);
             $episodeRepository->save($episode, true);
 
             return $this->redirectToRoute('app_episode_index', [], Response::HTTP_SEE_OTHER);

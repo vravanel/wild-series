@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('comment_delete', {'id': comments.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comments.id) }}">
+    <button class="btn">Delete</button>
+</form>

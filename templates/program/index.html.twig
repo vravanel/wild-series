@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <h2>{{ program.title }} - Catégorie : {{ program.category.name }}</h2>
                     <p>{{ program.synopsis }}</p>
-                    <button> <a href="{{ path("program_show", { id: program.id }) }}">Voir la fiche</a> </button>
+                    <button> <a href="{{ path("program_show", { slug: program.slug }) }}">Voir la fiche</a> </button>
                 </div>
             </div>
         </div>        

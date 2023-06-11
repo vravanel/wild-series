@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\ProgramRepository;
 use App\Repository\CategoryRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CategoryController extends AbstractController
 {
-    #[Route('/category/', name: 'category_index')]
+    #[Route('/category', name: 'category_index')]
 public function index(CategoryRepository $categoryRepository): Response
 {
     $categories = $categoryRepository->findAll();
@@ -23,7 +24,8 @@ public function index(CategoryRepository $categoryRepository): Response
     );
 }
 
-#[Route('/category/new', name: 'new')]
+#[Route('/category/new', name: 'category_new')]
+#[IsGranted('ROLE_ADMIN')]
 public function new(Request $request, CategoryRepository $categoryRepository) : Response
 {
     $category = new Category();
